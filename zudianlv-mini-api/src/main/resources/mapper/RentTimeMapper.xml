@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="club.zudianlv.mapper.RentTimeMapper" >
+  <resultMap id="BaseResultMap" type="club.zudianlv.pojo.RentTime" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="rent_time_id" property="rentTimeId" jdbcType="VARCHAR" />
+    <result column="week" property="week" jdbcType="INTEGER" />
+    <result column="begin_time" property="beginTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>
