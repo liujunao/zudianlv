@@ -6,14 +6,15 @@
       WARNING - @mbg.generated
     -->
     <id column="rent_id" property="rentId" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
     <result column="money" property="money" jdbcType="INTEGER" />
     <result column="manned" property="manned" jdbcType="INTEGER" />
     <result column="rent_time_id" property="rentTimeId" jdbcType="VARCHAR" />
     <result column="time" property="time" jdbcType="VARCHAR" />
     <result column="car_image" property="carImage" jdbcType="VARCHAR" />
-    <result column="nickName" property="nickname" jdbcType="VARCHAR" />
-    <result column="avatarUrl" property="avatarurl" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="avatar_url" property="avatarUrl" jdbcType="VARCHAR" />
     <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="area_num" property="areaNum" jdbcType="INTEGER" />
     <result column="weixin" property="weixin" jdbcType="VARCHAR" />

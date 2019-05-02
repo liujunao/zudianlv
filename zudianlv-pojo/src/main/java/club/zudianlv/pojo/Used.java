@@ -1,7 +1,6 @@
 package club.zudianlv.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 public class Used {
     /**
@@ -14,8 +13,8 @@ public class Used {
     /**
      * 用户id
      */
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "open_id")
+    private String openId;
 
     /**
      * 二手车图片
@@ -37,14 +36,19 @@ public class Used {
     /**
      * 发布者昵称
      */
-    @Column(name = "nickName")
-    private String nickname;
+    @Column(name = "nick_name")
+    private String nickName;
+
+    /**
+     * 性别： 0：女 1：男
+     */
+    private Integer gender;
 
     /**
      * 发布者头像
      */
-    @Column(name = "avatarUrl")
-    private String avatarurl;
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 
     /**
      * 发布者宿舍区：韵苑
@@ -88,19 +92,19 @@ public class Used {
     /**
      * 获取用户id
      *
-     * @return user_id - 用户id
+     * @return open_id - 用户id
      */
-    public String getUserId() {
-        return userId;
+    public String getOpenId() {
+        return openId;
     }
 
     /**
      * 设置用户id
      *
-     * @param userId 用户id
+     * @param openId 用户id
      */
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
     /**
@@ -160,37 +164,55 @@ public class Used {
     /**
      * 获取发布者昵称
      *
-     * @return nickName - 发布者昵称
+     * @return nick_name - 发布者昵称
      */
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
     /**
      * 设置发布者昵称
      *
-     * @param nickname 发布者昵称
+     * @param nickName 发布者昵称
      */
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    /**
+     * 获取性别： 0：女 1：男
+     *
+     * @return gender - 性别： 0：女 1：男
+     */
+    public Integer getGender() {
+        return gender;
+    }
+
+    /**
+     * 设置性别： 0：女 1：男
+     *
+     * @param gender 性别： 0：女 1：男
+     */
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
     /**
      * 获取发布者头像
      *
-     * @return avatarUrl - 发布者头像
+     * @return avatar_url - 发布者头像
      */
-    public String getAvatarurl() {
-        return avatarurl;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
     /**
      * 设置发布者头像
      *
-     * @param avatarurl 发布者头像
+     * @param avatarUrl 发布者头像
      */
-    public void setAvatarurl(String avatarurl) {
-        this.avatarurl = avatarurl;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     /**

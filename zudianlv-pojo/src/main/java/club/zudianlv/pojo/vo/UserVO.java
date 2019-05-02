@@ -1,6 +1,5 @@
 package club.zudianlv.pojo.vo;
 
-
 public class UserVO {
 
     private String nickName;

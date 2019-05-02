@@ -1,21 +1,26 @@
 package club.zudianlv.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 public class User {
     /**
-     * 用户 ID
+     * 用户 ID，通过微信获得
      */
     @Id
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "open_id")
+    private String openId;
+
+    /**
+     * 用于保存 session_key，当用户信息变化时，更新该字段值
+     */
+    @Column(name = "session_key")
+    private String sessionKey;
 
     /**
      * 昵称
      */
-    @Column(name = "nickName")
-    private String nickname;
+    @Column(name = "nick_name")
+    private String nickName;
 
     /**
      * 性别： 0：女 1：男
@@ -25,7 +30,7 @@ public class User {
     /**
      * 头像
      */
-    @Column(name = "avatarUrl")
+    @Column(name = "avatar_url")
     private String avatarUrl;
 
     /**
@@ -73,58 +78,99 @@ public class User {
     public User() {
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId='" + userId + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", gender=" + gender +
-                ", avatarUrl='" + avatarUrl + '\'' +
-                ", hustImage='" + hustImage + '\'' +
-                ", college='" + college + '\'' +
-                ", grade='" + grade + '\'' +
-                ", area='" + area + '\'' +
-                ", areaNum=" + areaNum +
-                ", weixin='" + weixin + '\'' +
-                ", rent=" + rent +
-                ", used=" + used +
-                '}';
+    //注册或登陆出错，返回 -1
+    public User(String openId) {
+        this.openId = openId;
+    }
+
+    //注册时，保存用户信息: rent 与 userd 默认为 0
+    public User(String openId, String sessionKey, String nickName, Integer gender, String avatarUrl, Integer rent, Integer used) {
+        this.openId = openId;
+        this.sessionKey = sessionKey;
+        this.nickName = nickName;
+        this.gender = gender;
+        this.avatarUrl = avatarUrl;
+        this.rent = rent;
+        this.used = used;
+    }
+
+    //用户信息改变时，用于更新
+    public User(String openId, String sessionKey, String nickName, Integer gender, String avatarUrl) {
+        this.openId = openId;
+        this.sessionKey = sessionKey;
+        this.nickName = nickName;
+        this.gender = gender;
+        this.avatarUrl = avatarUrl;
+    }
+
+    //完善用户信息
+    public User(String openId, String college, String grade, String area, Integer areaNum, String weixin) {
+        this.openId = openId;
+        this.college = college;
+        this.grade = grade;
+        this.area = area;
+        this.areaNum = areaNum;
+        this.weixin = weixin;
+    }
+
+    //上传学生证照片
+    public User(String openId, String hustImage) {
+        this.openId = openId;
+        this.hustImage = hustImage;
     }
 
     /**
-     * 获取用户 ID
+     * 获取用户 ID，通过微信获得
      *
-     * @return user_id - 用户 ID
+     * @return open_id - 用户 ID，通过微信获得
      */
-    public String getUserId() {
-        return userId;
+    public String getOpenId() {
+        return openId;
     }
 
     /**
-     * 设置用户 ID
+     * 设置用户 ID，通过微信获得
      *
-     * @param userId 用户 ID
+     * @param openId 用户 ID，通过微信获得
      */
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    /**
+     * 获取用于保存 session_key，当用户信息变化时，更新该字段值
+     *
+     * @return session_key - 用于保存 session_key，当用户信息变化时，更新该字段值
+     */
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    /**
+     * 设置用于保存 session_key，当用户信息变化时，更新该字段值
+     *
+     * @param sessionKey 用于保存 session_key，当用户信息变化时，更新该字段值
+     */
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
     }
 
     /**
      * 获取昵称
      *
-     * @return nickName - 昵称
+     * @return nick_name - 昵称
      */
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
     /**
      * 设置昵称
      *
-     * @param nickname 昵称
+     * @param nickName 昵称
      */
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     /**
@@ -148,7 +194,7 @@ public class User {
     /**
      * 获取头像
      *
-     * @return avatarUrl - 头像
+     * @return avatar_url - 头像
      */
     public String getAvatarUrl() {
         return avatarUrl;
