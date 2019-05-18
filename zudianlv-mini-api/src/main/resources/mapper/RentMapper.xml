@@ -1,24 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="club.zudianlv.mapper.RentMapper" >
-  <resultMap id="BaseResultMap" type="club.zudianlv.pojo.Rent" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="rent_id" property="rentId" jdbcType="VARCHAR" />
-    <result column="open_id" property="openId" jdbcType="VARCHAR" />
-    <result column="money" property="money" jdbcType="INTEGER" />
-    <result column="manned" property="manned" jdbcType="INTEGER" />
-    <result column="rent_time_id" property="rentTimeId" jdbcType="VARCHAR" />
-    <result column="time" property="time" jdbcType="VARCHAR" />
-    <result column="car_image" property="carImage" jdbcType="VARCHAR" />
-    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
-    <result column="gender" property="gender" jdbcType="INTEGER" />
-    <result column="avatar_url" property="avatarUrl" jdbcType="VARCHAR" />
-    <result column="area" property="area" jdbcType="VARCHAR" />
-    <result column="area_num" property="areaNum" jdbcType="INTEGER" />
-    <result column="weixin" property="weixin" jdbcType="VARCHAR" />
-    <result column="rent" property="rent" jdbcType="INTEGER" />
-    <result column="message" property="message" jdbcType="LONGVARCHAR" />
-  </resultMap>
+<mapper namespace="club.zudianlv.mapper.RentMapper">
+    <resultMap id="BaseResultMap" type="club.zudianlv.pojo.Rent">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="rent_id" property="rentId" jdbcType="VARCHAR"/>
+        <result column="open_id" property="openId" jdbcType="VARCHAR"/>
+        <result column="money" property="money" jdbcType="INTEGER"/>
+        <result column="manned" property="manned" jdbcType="INTEGER"/>
+        <result column="rent_time_id" property="rentTimeId" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="VARCHAR"/>
+        <result column="car_image" property="carImage" jdbcType="VARCHAR"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="INTEGER"/>
+        <result column="avatar_url" property="avatarUrl" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="VARCHAR"/>
+        <result column="area_num" property="areaNum" jdbcType="INTEGER"/>
+        <result column="weixin" property="weixin" jdbcType="VARCHAR"/>
+        <result column="rent" property="rent" jdbcType="INTEGER"/>
+        <result column="message" property="message" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+    <!-- 修改租车信息 -->
+    <update id="addRent" parameterType="club.zudianlv.pojo.Rent">
+        UPDATE rent SET message=#{message},money=#{money},manned=#{manned},rent_time_id=#{rentTimeId},
+        time=#{time},nick_name=#{nickName},gender=#{gender},avatar_url=#{avatarUrl},area=#{area},
+        area_num=#{areaNum},weixin=#{weixin},rent=#{rent}
+        WHERE open_id=#{openId}
+    </update>
+
+    <!-- 根据指定条件查询 -->
+    <select id="getRentBySelect" parameterType="club.zudianlv.pojo.vo.SelectVO"
+            resultType="club.zudianlv.pojo.Rent">
+        SELECT * FROM rent
+        <where>
+            <if test="area!=null">
+                area=#{area}
+            </if>
+            <if test="areaNum!=null">
+                and area_num=#{areaNum}
+            </if>
+            <if test="manned!=null">
+                and manned=#{manned}
+            </if>
+            <if test="gender!=null">
+                and gender=#{gender}
+            </if>
+        </where>
+    </select>
+
 </mapper>

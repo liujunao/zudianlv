@@ -27,7 +27,7 @@ public class Rent {
     private Integer manned;
 
     /**
-     * 空闲时段表 id
+     * 空闲时段表 id: 改为记录周几
      */
     @Column(name = "rent_time_id")
     private String rentTimeId;
@@ -85,6 +85,56 @@ public class Rent {
      * 备注信息
      */
     private String message;
+
+    public Rent() {
+    }
+
+    public Rent(String openId) {
+        this.openId = openId;
+    }
+
+    public Rent(String rentId, String openId, String carImage) {
+        this.rentId = rentId;
+        this.openId = openId;
+        this.carImage = carImage;
+    }
+
+    public Rent(String openId, Integer money, Integer manned, String rentTimeId, String time, String nickName, Integer gender, String avatarUrl, String area, Integer areaNum, String weixin, Integer rent, String message) {
+        this.openId = openId;
+        this.money = money;
+        this.manned = manned;
+        this.rentTimeId = rentTimeId;
+        this.time = time;
+        this.nickName = nickName;
+        this.gender = gender;
+        this.avatarUrl = avatarUrl;
+        this.area = area;
+        this.areaNum = areaNum;
+        this.weixin = weixin;
+        this.rent = rent;
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "Rent{" +
+                "rentId='" + rentId + '\'' +
+                ", openId='" + openId + '\'' +
+                ", money=" + money +
+                ", manned=" + manned +
+                ", rentTimeId='" + rentTimeId + '\'' +
+                ", time='" + time + '\'' +
+                ", carImage='" + carImage + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", gender=" + gender +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", area='" + area + '\'' +
+                ", areaNum=" + areaNum +
+                ", weixin='" + weixin + '\'' +
+                ", rent=" + rent +
+                ", message='" + message + '\'' +
+                '}';
+    }
 
     /**
      * 获取租车id

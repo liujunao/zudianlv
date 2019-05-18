@@ -71,6 +71,10 @@ public class Used {
      */
     private String message;
 
+    public Used(String openId) {
+        this.openId = openId;
+    }
+
     /**
      * 获取二手车id
      *

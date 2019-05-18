@@ -1,11 +1,12 @@
 package club.zudianlv.controller;
 
 import club.zudianlv.config.ResourceConfig;
-import club.zudianlv.pojo.User;
+import club.zudianlv.pojo.*;
+import club.zudianlv.pojo.vo.RentVO;
 import club.zudianlv.pojo.vo.UserAppend;
 import club.zudianlv.pojo.vo.UserVO;
 import club.zudianlv.pojo.vo.WxResult;
-import club.zudianlv.service.UserService;
+import club.zudianlv.service.*;
 import club.zudianlv.utils.HttpClientUtil;
 import club.zudianlv.utils.JsonUtils;
 import org.apache.commons.io.IOUtils;
@@ -18,8 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author yinren
@@ -33,6 +33,14 @@ public class UserController extends BasicController {
     private ResourceConfig resourceConfig;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RentService rentService;
+    @Autowired
+    private RentTimeService rentTimeService;
+    @Autowired
+    private PublishService publishService;
+    @Autowired
+    private UsedService usedService;
 
     //首次登陆时，进行注册操作
     @PostMapping("/wxRegister")
@@ -49,7 +57,7 @@ public class UserController extends BasicController {
         if (StringUtils.isBlank(userIsExist)) {//不存在该用户，进行注册
             System.out.println(userIsExist);
             user = new User(wx.getOpenid(), wx.getSession_key(), userVO.getNickName(), userVO.getGender(), userVO.getAvatarUrl(), 0, 0);
-//        userService.saveRegister(user);//将用户信息保存到数据库
+            userService.saveRegister(user);//将用户信息保存到数据库
             setUserRedis(wx);//将 openid 与 session_key 保存到 redis 中
         } else {//该用户已存在
             //用户信息更新
@@ -64,16 +72,15 @@ public class UserController extends BasicController {
     //用户信息修改后的登陆
     @PostMapping("/wxLogin")
     public User wxLogin(String code) {
-        System.out.println("code: " + code);
         WxResult wx = getWX(code);
         String redisSessionKey = redisOperator.get(wx.getOpenid());
-        if (redisSessionKey != null) {
-            return new User(wx.getOpenid()); //用户信息未改变且在redis中保存
+        if (redisSessionKey != null) {//用户信息未改变且在redis中保存
+            return userService.getUser(wx.getOpenid());
         } else {//redis 中未保存或过期
             String session = userService.getIdAndSession(wx.getOpenid());//从数据库中获取 session_key
             if (session.equals(wx.getSession_key())) {//session_key 相同
                 setUserRedis(wx);//再次保存到 redis 中
-                return new User(wx.getOpenid());
+                return userService.getUser(wx.getOpenid());
             } else {
                 return new User("-1");
             }
@@ -86,7 +93,6 @@ public class UserController extends BasicController {
         if (StringUtils.isBlank(userAppend.getOpenId())) {
             return new User("-1");
         } else {
-            System.out.println(userAppend);
             int appendUser = userService.appendUser(userAppend);
             if (appendUser == 0) {
                 return new User("-1");
@@ -104,46 +110,168 @@ public class UserController extends BasicController {
         if (StringUtils.isBlank(openId)) {
             return new User("-1");
         }
-        //文件保存位置
-        String fileSpace = resourceConfig.getFileSpace();
         //保存到数据库中的相对路径
         String uploadPathDB = "/" + openId;
 
+        String uploadImg = uploadImg(openId, files, uploadPathDB);//图片保存
+        if (uploadImg.equals("-1")) {
+            return new User("-1");
+        } else {
+            uploadPathDB += "/" + uploadImg;
+        }
+        User uploadUser = new User(openId, uploadPathDB);
+        userService.uploadHust(uploadUser);
+
+        return userService.getUser(openId);
+    }
+
+    //我的出租信息
+    @RequestMapping("/rent/list")
+    public RentVO rentList(String openId) {
+        Rent rent = rentService.getRentByOpenId(openId);
+        if (rent != null) {
+            //获取 rentTime 信息
+            List<RentTime> rentTimeByOpenId = rentTimeService.getRentTimeByOpenId(openId);
+            return new RentVO(rent, rentTimeByOpenId);
+        } else {
+            return new RentVO(new Rent("-1"));
+        }
+    }
+
+    //出租信息添加/修改
+    @RequestMapping("/rent/add")
+    public RentVO rentAdd(@RequestBody RentVO rentVO) {
+        if (StringUtils.isBlank(rentVO.getRent().getOpenId())) {
+            return new RentVO(new Rent("-1"));
+        } else {
+            List<RentTime> rentTimes = rentVO.getRentTime();
+            //判断 RentTime 是否已有指定 openId 的值
+            List<RentTime> rentTimeByOpenId = rentTimeService.getRentTimeByOpenId(rentVO.getRent().getOpenId());
+            if (rentTimeByOpenId != null) {//已有，则删除
+                rentTimeService.deleteByOpenId(rentVO.getRent().getOpenId());
+            }
+            rentTimeService.addRentTime(rentTimes, rentVO.getRent().getOpenId());//插入
+
+            //获取 week 信息，方便筛选
+            String rentWeek = "";
+            for (RentTime rentTime : rentTimes){
+                rentWeek += String.valueOf(rentTime.getWeek()) + ",";
+            }
+
+            //rent 信息添加
+            Rent rent = new Rent(rentVO.getRent().getOpenId(), rentVO.getRent().getMoney(), rentVO.getRent().getManned(), rentWeek, Long.toString(new Date().getTime()), rentVO.getRent().getNickName(),
+                    rentVO.getRent().getGender(), rentVO.getRent().getAvatarUrl(), rentVO.getRent().getArea(), rentVO.getRent().getAreaNum(), rentVO.getRent().getWeixin(), rentVO.getRent().getRent(), rentVO.getRent().getMessage());
+            int addRent = rentService.addRent(rent);//修改或添加
+            if (addRent == -1) {
+                return new RentVO(new Rent("-1"));
+            } else {
+                Rent rentTmp = rentService.getRentByOpenId(rentVO.getRent().getOpenId());
+                List<RentTime> rentTimeTmp = rentTimeService.getRentTimeByOpenId(rentVO.getRent().getOpenId());
+                return new RentVO(rentTmp, rentTimeTmp);
+            }
+        }
+    }
+
+    //上传出租车辆图片
+    @RequestMapping("/rent/addCar")
+    public Rent rentAddCarImage(String openId, @RequestParam("car") MultipartFile[] files) throws IOException {
+        if (StringUtils.isBlank(openId)) {
+            return new Rent("-1");
+        }
+        //保存到数据库中的相对路径
+        String uploadPathDB = "/" + openId;
+        String uploadImg = uploadImg(openId, files, uploadPathDB);//上传图片到文件夹
+        if (uploadImg.equals("-1")) {
+            return new Rent("-1");
+        } else {
+            uploadPathDB += "/" + uploadImg;
+        }
+        rentService.uploadCar(openId, uploadPathDB);//上传，同时判断是否已经存在
+        return rentService.getRentByOpenId(openId);
+    }
+
+    //返回我的求租列表
+    @RequestMapping("/publish/list")
+    public List<Publish> publishList(String openId) {
+        if (StringUtils.isBlank(openId)) {
+            List<Publish> list = new ArrayList<>();
+            list.add(new Publish("-1"));
+            return list;
+        } else {
+            List<Publish> publishList = publishService.publishListByOpenId(openId);
+            return publishList;
+        }
+    }
+
+    //删除我的求租信息
+    @RequestMapping("/publish/delete")
+    public Publish deletePublish(String publishId, String openId) {
+        publishService.deleteById(publishId, openId);
+        return new Publish(openId);
+    }
+
+    //查看指定 openId 的二手车信息
+    @RequestMapping("/used/list")
+    public Used usedList(String openId) {
+        Used usedByOpenId = usedService.getUsedByOpenId(openId);
+        return usedByOpenId;
+    }
+
+    //修改或添加二手车信息
+    @RequestMapping("/used/change")
+    public Used changeUsed(Used used) {
+        Used usedByOpenId = usedService.getUsedByOpenId(used.getOpenId());
+        if (usedByOpenId != null) {
+            int updateUsed = usedService.updateUsed(used);
+            if (updateUsed > 0) {
+                return used;
+            } else {
+                return new Used("-1");
+            }
+        } else {
+            usedService.addUsed(used);
+            return usedService.getUsedByOpenId(used.getOpenId());
+        }
+    }
+
+    //上传图片
+    private String uploadImg(String openId, MultipartFile[] files, String uploadPathDB) throws IOException {
+        //文件保存位置
+        String fileSpace = resourceConfig.getFileSpace();
+
         FileOutputStream fileOutputStream = null;
         InputStream inputStream = null;
+        String fileName = "";
         try {
             if (files != null && files.length > 0) {
-                String fileName = files[0].getOriginalFilename();
+                fileName = files[0].getOriginalFilename();
                 if (StringUtils.isNotBlank(fileName)) {
                     //文件上传的最终路径
                     String finalPath = fileSpace + uploadPathDB + "/" + fileName;
-                    uploadPathDB += "/" + fileName;
                     //判断文件夹是否存在
                     File outFile = new File(finalPath);
                     if (outFile.getParentFile() != null || !outFile.getParentFile().isDirectory()) {
                         //创建文件夹
                         outFile.getParentFile().mkdirs();
                     }
-
                     fileOutputStream = new FileOutputStream(outFile);
                     inputStream = files[0].getInputStream();
                     IOUtils.copy(inputStream, fileOutputStream);
                 }
             } else {
-                return new User("-1");
+                System.out.println("file error");
+                return "-1";
             }
         } catch (Exception e) {
-            return new User("-1");
+            e.printStackTrace();
+            return "-1";
         } finally {
             if (fileOutputStream != null) {
                 fileOutputStream.flush();
                 fileOutputStream.close();
             }
         }
-        User uploadUser = new User(openId, uploadPathDB);
-        userService.uploadHust(uploadUser);
-
-        return userService.getUser(openId);
+        return fileName;
     }
 
     //根据 code 获取用户 openid 与 session_key

@@ -15,6 +15,7 @@ public class Sid {
     static {
         configure(DefaultWorkerIdStrategy.instance);
     }
+
     public static synchronized void configure(WorkerIdStrategy custom) {
         if (workerIdStrategy != null) {
             workerIdStrategy.release();
@@ -45,7 +46,7 @@ public class Sid {
     /**
      * 返回固定16位的字母数字混编的字符串。
      */
-    public static String nextShort() {
+    public String nextShort() {
         long id = idWorker.nextId();
         String yyMMdd = new SimpleDateFormat("yyMMdd").format(new Date());
         return yyMMdd + Utils.padLeft(Utils.encode(id), 10, '0');

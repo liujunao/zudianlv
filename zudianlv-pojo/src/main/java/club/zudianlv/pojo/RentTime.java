@@ -11,6 +11,9 @@ public class RentTime {
     @Column(name = "rent_time_id")
     private String rentTimeId;
 
+    @Column(name = "open_id")
+    private String openId;
+
     /**
      * 周几：1--> 周一
      */
@@ -27,6 +30,37 @@ public class RentTime {
      */
     @Column(name = "end_time")
     private String endTime;
+
+    public RentTime() {
+    }
+
+    public RentTime(Integer week, String beginTime, String endTime) {
+        this.week = week;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+    }
+
+    public RentTime(String openId) {
+        this.openId = openId;
+    }
+
+    @Override
+    public String toString() {
+        return "RentTime{" +
+                "rentTimeId='" + rentTimeId + '\'' +
+                ", week=" + week +
+                ", beginTime='" + beginTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                '}';
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
 
     /**
      * 获取空闲时间段id

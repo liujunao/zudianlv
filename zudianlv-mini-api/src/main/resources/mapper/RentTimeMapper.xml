@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="rent_time_id" property="rentTimeId" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
     <result column="week" property="week" jdbcType="INTEGER" />
     <result column="begin_time" property="beginTime" jdbcType="VARCHAR" />
     <result column="end_time" property="endTime" jdbcType="VARCHAR" />

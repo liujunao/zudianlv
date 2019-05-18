@@ -87,6 +87,36 @@ public class Publish {
      */
     private String message;
 
+    public Publish() {
+    }
+
+    public Publish(String openId) {
+        this.openId = openId;
+    }
+
+    public Publish(String publishId, String openId) {
+        this.publishId = publishId;
+        this.openId = openId;
+    }
+
+    public Publish(String publishId, String openId, Integer money, String yyyy, Integer week, String beginTime, String endTime, String createTime, String nickName, Integer gender, String avatarUrl, String area, Integer areaNum, String weixin, String message) {
+        this.publishId = publishId;
+        this.openId = openId;
+        this.money = money;
+        this.yyyy = yyyy;
+        this.week = week;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+        this.createTime = createTime;
+        this.nickName = nickName;
+        this.gender = gender;
+        this.avatarUrl = avatarUrl;
+        this.area = area;
+        this.areaNum = areaNum;
+        this.weixin = weixin;
+        this.message = message;
+    }
+
     /**
      * 获取想租车id
      *
