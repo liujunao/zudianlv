@@ -19,13 +19,7 @@
             <artifactId>zudianlv-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <!-- 添加依赖，为了打包成 war -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.0</version>
-            <scope>provided</scope>
-        </dependency>
+
     </dependencies>
 
     <build>
