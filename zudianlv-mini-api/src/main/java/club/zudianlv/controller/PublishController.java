@@ -3,6 +3,7 @@ package club.zudianlv.controller;
 import club.zudianlv.pojo.Publish;
 import club.zudianlv.service.PublishService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,12 +27,9 @@ public class PublishController {
 
     //发布求租信息
     @RequestMapping("/add")
-    public Publish addPublish(Publish publish) {
-        int addPublish = publishService.addPublish(publish);
-        if (addPublish > 0) {
-            return new Publish("1");
-        } else {
-            return new Publish("-1");
-        }
+    public Publish addPublish(@RequestBody Publish publish) {
+        System.out.println(publish);
+        Publish addPublish = publishService.addPublish(publish);
+        return addPublish;
     }
 }

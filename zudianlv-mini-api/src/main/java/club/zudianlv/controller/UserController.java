@@ -219,7 +219,8 @@ public class UserController extends BasicController {
 
     //修改或添加二手车信息
     @RequestMapping("/used/change")
-    public Used changeUsed(Used used) {
+    public Used changeUsed(@RequestBody Used used) {
+        System.out.println(used);
         Used usedByOpenId = usedService.getUsedByOpenId(used.getOpenId());
         if (usedByOpenId != null) {
             int updateUsed = usedService.updateUsed(used);

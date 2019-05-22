@@ -17,5 +17,7 @@ public interface PublishService {
     //获取所有求租信息列表
     public List<Publish> allPublish();
     //添加 publish
-    public int addPublish(Publish publish);
+    public Publish addPublish(Publish publish);
+    //根据 publishId 返回
+    public Publish getPublishById(String publishId);
 }

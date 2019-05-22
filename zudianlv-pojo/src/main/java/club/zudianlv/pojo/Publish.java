@@ -90,6 +90,14 @@ public class Publish {
     public Publish() {
     }
 
+    public Publish(String id, int index) {
+        if (index == 1) {
+            this.openId = id;
+        } else if (index == 2) {
+            this.publishId = id;
+        }
+    }
+
     public Publish(String openId) {
         this.openId = openId;
     }
@@ -115,6 +123,27 @@ public class Publish {
         this.areaNum = areaNum;
         this.weixin = weixin;
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "Publish{" +
+                "publishId='" + publishId + '\'' +
+                ", openId='" + openId + '\'' +
+                ", money=" + money +
+                ", yyyy='" + yyyy + '\'' +
+                ", week=" + week +
+                ", beginTime='" + beginTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", gender=" + gender +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", area='" + area + '\'' +
+                ", areaNum=" + areaNum +
+                ", weixin='" + weixin + '\'' +
+                ", message='" + message + '\'' +
+                '}';
     }
 
     /**

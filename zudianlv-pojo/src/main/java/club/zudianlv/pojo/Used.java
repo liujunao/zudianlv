@@ -71,6 +71,27 @@ public class Used {
      */
     private String message;
 
+    public Used() {
+    }
+
+    @Override
+    public String toString() {
+        return "Used{" +
+                "usedId='" + usedId + '\'' +
+                ", openId='" + openId + '\'' +
+                ", usedImage='" + usedImage + '\'' +
+                ", money=" + money +
+                ", createTime='" + createTime + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", gender=" + gender +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", area='" + area + '\'' +
+                ", areaNum=" + areaNum +
+                ", weixin='" + weixin + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
+
     public Used(String openId) {
         this.openId = openId;
     }
