@@ -50,6 +50,11 @@ public class Publish {
     private String createTime;
 
     /**
+     * 0:未接单 1：已接单
+     */
+    private Integer status;
+
+    /**
      * 发布者昵称
      */
     @Column(name = "nick_name")
@@ -86,6 +91,11 @@ public class Publish {
      * 发布信息
      */
     private String message;
+
+    /**
+     * 阅读数
+     */
+    private Integer count;
 
     public Publish() {
     }
@@ -290,6 +300,14 @@ public class Publish {
         this.createTime = createTime;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     /**
      * 获取发布者昵称
      *
@@ -414,5 +432,13 @@ public class Publish {
      */
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

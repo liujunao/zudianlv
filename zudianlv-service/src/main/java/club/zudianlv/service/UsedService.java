@@ -18,4 +18,11 @@ public interface UsedService {
     public void addUsed(Used used);
     //获取所有二手车信息
     public List<Used> getAllUsed();
+    //根据 id 查询
+    public Used getUsedById(String usedId);
+    //count
+    public int changeCount(String usedId, Integer count);
+
+    //二手车状态修改
+    public int usedChange(String usedId, Integer used);
 }

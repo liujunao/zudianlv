@@ -65,16 +65,6 @@ public class User {
      */
     private String weixin;
 
-    /**
-     * 出租信息展示 0：未发布 1：发布展示 2：发布未展示
-     */
-    private Integer rent;
-
-    /**
-     * 二手车信息展示 0：未发布 1：发布未出售 2：发布未出售
-     */
-    private Integer used;
-
     public User() {
     }
 
@@ -83,18 +73,6 @@ public class User {
         this.openId = openId;
     }
 
-    //注册时，保存用户信息: rent 与 userd 默认为 0
-    public User(String openId, String sessionKey, String nickName, Integer gender, String avatarUrl, Integer rent, Integer used) {
-        this.openId = openId;
-        this.sessionKey = sessionKey;
-        this.nickName = nickName;
-        this.gender = gender;
-        this.avatarUrl = avatarUrl;
-        this.rent = rent;
-        this.used = used;
-    }
-
-    //用户信息改变时，用于更新
     public User(String openId, String sessionKey, String nickName, Integer gender, String avatarUrl) {
         this.openId = openId;
         this.sessionKey = sessionKey;
@@ -315,41 +293,5 @@ public class User {
      */
     public void setWeixin(String weixin) {
         this.weixin = weixin;
-    }
-
-    /**
-     * 获取出租信息展示 0：未发布 1：发布展示 2：发布未展示
-     *
-     * @return rent - 出租信息展示 0：未发布 1：发布展示 2：发布未展示
-     */
-    public Integer getRent() {
-        return rent;
-    }
-
-    /**
-     * 设置出租信息展示 0：未发布 1：发布展示 2：发布未展示
-     *
-     * @param rent 出租信息展示 0：未发布 1：发布展示 2：发布未展示
-     */
-    public void setRent(Integer rent) {
-        this.rent = rent;
-    }
-
-    /**
-     * 获取二手车信息展示 0：未发布 1：发布未出售 2：发布未出售
-     *
-     * @return used - 二手车信息展示 0：未发布 1：发布未出售 2：发布未出售
-     */
-    public Integer getUsed() {
-        return used;
-    }
-
-    /**
-     * 设置二手车信息展示 0：未发布 1：发布未出售 2：发布未出售
-     *
-     * @param used 二手车信息展示 0：未发布 1：发布未出售 2：发布未出售
-     */
-    public void setUsed(Integer used) {
-        this.used = used;
     }
 }

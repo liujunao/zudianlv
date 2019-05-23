@@ -13,6 +13,7 @@
         <result column="begin_time" property="beginTime" jdbcType="VARCHAR"/>
         <result column="end_time" property="endTime" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
         <result column="gender" property="gender" jdbcType="INTEGER"/>
         <result column="avatar_url" property="avatarUrl" jdbcType="VARCHAR"/>
@@ -20,5 +21,14 @@
         <result column="area_num" property="areaNum" jdbcType="INTEGER"/>
         <result column="weixin" property="weixin" jdbcType="VARCHAR"/>
         <result column="message" property="message" jdbcType="LONGVARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
     </resultMap>
+
+    <update id="changeCount">
+        UPDATE publish SET "count"=#{1} WHERE publish_id=#{0}
+    </update>
+
+    <update id="statusChange">
+        UPDATE publish SET status=#{1} WHERE publish_id=#{0}
+    </update>
 </mapper>

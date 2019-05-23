@@ -44,4 +44,22 @@ public class UsedServiceImpl implements UsedService {
     public List<Used> getAllUsed() {
         return usedMapper.selectAll();
     }
+
+    @Override
+    public Used getUsedById(String usedId) {
+        Used usedById = usedMapper.getUsedById(usedId);
+        return usedById;
+    }
+
+    @Override
+    public int changeCount(String usedId, Integer count) {
+        int changeCount = usedMapper.changeCount(usedId, count);
+        return changeCount;
+    }
+
+    @Override
+    public int usedChange(String usedId, Integer used) {
+        int usedChange = usedMapper.usedChange(usedId, used);
+        return usedChange;
+    }
 }

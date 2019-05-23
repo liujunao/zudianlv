@@ -86,6 +86,11 @@ public class Rent {
      */
     private String message;
 
+    /**
+     * 阅读数
+     */
+    private Integer count;
+
     public Rent() {
     }
 
@@ -99,7 +104,7 @@ public class Rent {
         this.carImage = carImage;
     }
 
-    public Rent(String openId, Integer money, Integer manned, String rentTimeId, String time, String nickName, Integer gender, String avatarUrl, String area, Integer areaNum, String weixin, Integer rent, String message) {
+    public Rent(String openId, Integer money, Integer manned, String rentTimeId, String time, String nickName, Integer gender, String avatarUrl, String area, Integer areaNum, String weixin, Integer rent, String message, Integer count) {
         this.openId = openId;
         this.money = money;
         this.manned = manned;
@@ -113,6 +118,7 @@ public class Rent {
         this.weixin = weixin;
         this.rent = rent;
         this.message = message;
+        this.count = count;
     }
 
     @Override
@@ -404,5 +410,13 @@ public class Rent {
      */
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

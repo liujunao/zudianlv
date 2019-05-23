@@ -60,4 +60,22 @@ public class RentServiceImpl implements RentService {
         List<Rent> rentBySelect = rentMapper.getRentBySelect(selectVO);
         return rentBySelect;
     }
+
+    @Override
+    public Rent getRentById(String rentId) {
+        Rent rent = rentMapper.getRentById(rentId);
+        return rent;
+    }
+
+    @Override
+    public int changeCount(String rentId, Integer count) {
+        int changeCount = rentMapper.changeCount(rentId, count);
+        return changeCount;
+    }
+
+    @Override
+    public int rentChange(String rentId, Integer rent) {
+        int rentChange = rentMapper.rentChange(rentId, rent);
+        return rentChange;
+    }
 }

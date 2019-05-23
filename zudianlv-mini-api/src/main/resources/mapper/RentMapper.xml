@@ -20,6 +20,7 @@
         <result column="weixin" property="weixin" jdbcType="VARCHAR"/>
         <result column="rent" property="rent" jdbcType="INTEGER"/>
         <result column="message" property="message" jdbcType="LONGVARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
     </resultMap>
 
     <!-- 修改租车信息 -->
@@ -32,10 +33,10 @@
 
     <!-- 根据指定条件查询 -->
     <select id="getRentBySelect" parameterType="club.zudianlv.pojo.vo.SelectVO"
-            resultType="club.zudianlv.pojo.Rent">
+            resultMap="BaseResultMap">
         SELECT * FROM rent
         <where>
-            <if test="area!=null">
+            <if test="area!=''">
                 area=#{area}
             </if>
             <if test="areaNum!=null">
@@ -50,4 +51,16 @@
         </where>
     </select>
 
+    <!-- 根据 rentId 查询 -->
+    <select id="getRentById" parameterType="string" resultMap="BaseResultMap">
+        select * from rent WHERE rent_id=#{rentId};
+    </select>
+
+    <update id="changeCount">
+        UPDATE rent SET "count"=#{1} WHERE rent_id=#{0}
+    </update>
+
+    <update id="rentChange">
+        UPDATE rent SET rent=#{1} WHERE rent_id=#{0}
+    </update>
 </mapper>

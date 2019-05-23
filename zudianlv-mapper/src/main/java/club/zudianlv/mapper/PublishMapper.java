@@ -4,4 +4,9 @@ import club.zudianlv.pojo.Publish;
 import club.zudianlv.utils.MyMapper;
 
 public interface PublishMapper extends MyMapper<Publish> {
+    //count
+    public int changeCount(String rentId, Integer count);
+
+    //求租信息修改
+    public int statusChange(String publishId, Integer status);
 }

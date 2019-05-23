@@ -13,8 +13,6 @@
         <result column="area" property="area" jdbcType="VARCHAR"/>
         <result column="area_num" property="areaNum" jdbcType="INTEGER"/>
         <result column="weixin" property="weixin" jdbcType="VARCHAR"/>
-        <result column="rent" property="rent" jdbcType="INTEGER"/>
-        <result column="used" property="used" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="selectSessionById" resultType="String" parameterType="String">

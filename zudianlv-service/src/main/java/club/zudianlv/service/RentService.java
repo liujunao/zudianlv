@@ -25,4 +25,12 @@ public interface RentService {
 
     //根据指定条件查询
     public List<Rent> getRentBySelect(SelectVO selectVO);
+
+    //根据 rentId 查询
+    public Rent getRentById(String rentId);
+
+    public int changeCount(String rentId, Integer count);
+
+    //修改 rent 状态
+    public int rentChange(String rentId, Integer rent);
 }

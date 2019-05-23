@@ -1,9 +1,11 @@
 package club.zudianlv.controller;
 
+import club.zudianlv.pojo.Favorite;
 import club.zudianlv.pojo.Rent;
 import club.zudianlv.pojo.RentTime;
-import club.zudianlv.pojo.vo.RentVO;
+import club.zudianlv.pojo.vo.RentF;
 import club.zudianlv.pojo.vo.SelectVO;
+import club.zudianlv.service.FavoriteService;
 import club.zudianlv.service.RentService;
 import club.zudianlv.service.RentTimeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,37 +28,66 @@ public class RentController {
     private RentService rentService;
     @Autowired
     private RentTimeService rentTimeService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     //页面自动加载空闲车信息
     @RequestMapping("/list")
-    public List<RentVO> rentList() {
-        List<RentVO> rentVOList = new ArrayList<>();
+    public List<RentF> rentList() {
+        List<RentF> rentFList = new ArrayList<>();
 
         List<Rent> allRent = rentService.getAllRent();
         for (Rent rent : allRent) {
             List<RentTime> rentTimes = rentTimeService.getRentTimeByOpenId(rent.getOpenId());
-            rentVOList.add(new RentVO(rent, rentTimes));
+            rentFList = getFavoriteById(rent, rentFList, rentTimes);//将 favorite 加入
         }
-        return rentVOList;
+        return rentFList;
     }
 
     //车辆筛选
     @RequestMapping("/select")
-    public List<RentVO> rentSelect(@RequestBody SelectVO selectVO) {
-        List<RentVO> rentVOList = new ArrayList<>();//存放结果
+    public List<RentF> rentSelect(@RequestBody SelectVO selectVO) {
+        List<RentF> rentFList = new ArrayList<>();//存放结果
 
         List<Rent> rentBySelect = rentService.getRentBySelect(selectVO);//查询
         Integer[] week = selectVO.getWeek();
         //筛选
         for (Rent rent : rentBySelect) {
-            int[] ints = strToInt(rent.getRentTimeId().split(","));
-            boolean checkSame = checkSame(week, ints);
-            if (checkSame) {
-                List<RentTime> rentTimeByOpenId = rentTimeService.getRentTimeByOpenId(rent.getOpenId());
-                rentVOList.add(new RentVO(rent, rentTimeByOpenId));
+            if (week.length != 0) { //根据星期筛选
+                int[] ints = strToInt(rent.getRentTimeId().split(","));
+                boolean checkSame = checkSame(week, ints);
+                if (checkSame) {
+                    List<RentTime> rentTimes = rentTimeService.getRentTimeByOpenId(rent.getOpenId());
+                    rentFList = getFavoriteById(rent, rentFList, rentTimes);//将 favorite 加入
+                }
+            } else {
+                List<RentTime> rentTimes = rentTimeService.getRentTimeByOpenId(rent.getOpenId());
+                rentFList = getFavoriteById(rent, rentFList, rentTimes);//将 favorite 加入
             }
         }
-        return rentVOList;
+        return rentFList;
+    }
+
+    //添加阅读数
+    @RequestMapping("/count")
+    public Integer count(String rentId, Integer count) {
+        if (rentId == null) {
+            return -1;
+        } else {
+            int changeCount = rentService.changeCount(rentId, count);
+            return changeCount;
+        }
+    }
+
+    //根据 openId 与 otherId 获取信息
+    private List<RentF> getFavoriteById(Rent rent, List<RentF> rentFList, List<RentTime> rentTimes) {
+        Favorite favorite = favoriteService.getFavoriteByopenIdAndOtherId(rent.getOpenId(), rent.getRentId(), 1);
+        if (favorite != null) {
+            rentFList.add(new RentF(rent, rentTimes, favorite.getType()));
+        } else {
+            rentFList.add(new RentF(rent, rentTimes, 0));
+        }
+        return rentFList;
     }
 
     //将 String 数组转换为 int 数组

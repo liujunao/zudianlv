@@ -1,5 +1,7 @@
 package club.zudianlv.pojo.vo;
 
+import java.util.Arrays;
+
 /**
  * @author yinren
  * @date 2019/5/18
@@ -20,6 +22,17 @@ public class SelectVO {
         this.week = week;
         this.manned = manned;
         this.gender = gender;
+    }
+
+    @Override
+    public String toString() {
+        return "SelectVO{" +
+                "area='" + area + '\'' +
+                ", areaNum=" + areaNum +
+                ", week=" + Arrays.toString(week) +
+                ", manned=" + manned +
+                ", gender=" + gender +
+                '}';
     }
 
     public String getArea() {

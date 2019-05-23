@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="club.zudianlv.mapper.FavoriteMapper">
+    <resultMap id="BaseResultMap" type="club.zudianlv.pojo.Favorite">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="favorite_id" property="favoriteId" jdbcType="VARCHAR"/>
+        <result column="open_id" property="openId" jdbcType="VARCHAR"/>
+        <result column="other_id" property="otherId" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <delete id="deleteFavorite" parameterType="club.zudianlv.pojo.Favorite">
+        DELETE FROM favorite WHERE open_id=#{openId} AND other_id=#{otherId}
+    </delete>
+</mapper>

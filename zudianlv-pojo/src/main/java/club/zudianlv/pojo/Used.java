@@ -34,6 +34,11 @@ public class Used {
     private String createTime;
 
     /**
+     * 二手车信息展示 0：未发布 1：发布未出售 2：发布未出售
+     */
+    private Integer used;
+
+    /**
      * 发布者昵称
      */
     @Column(name = "nick_name")
@@ -71,6 +76,11 @@ public class Used {
      */
     private String message;
 
+    /**
+     * 阅读数
+     */
+    private Integer count;
+
     public Used() {
     }
 
@@ -103,6 +113,14 @@ public class Used {
      */
     public String getUsedId() {
         return usedId;
+    }
+
+    public Integer getUsed() {
+        return used;
+    }
+
+    public void setUsed(Integer used) {
+        this.used = used;
     }
 
     /**
@@ -310,5 +328,13 @@ public class Used {
      */
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

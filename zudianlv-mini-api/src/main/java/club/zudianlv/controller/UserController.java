@@ -2,10 +2,7 @@ package club.zudianlv.controller;
 
 import club.zudianlv.config.ResourceConfig;
 import club.zudianlv.pojo.*;
-import club.zudianlv.pojo.vo.RentVO;
-import club.zudianlv.pojo.vo.UserAppend;
-import club.zudianlv.pojo.vo.UserVO;
-import club.zudianlv.pojo.vo.WxResult;
+import club.zudianlv.pojo.vo.*;
 import club.zudianlv.service.*;
 import club.zudianlv.utils.HttpClientUtil;
 import club.zudianlv.utils.JsonUtils;
@@ -41,6 +38,8 @@ public class UserController extends BasicController {
     private PublishService publishService;
     @Autowired
     private UsedService usedService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     //首次登陆时，进行注册操作
     @PostMapping("/wxRegister")
@@ -56,7 +55,7 @@ public class UserController extends BasicController {
         User user;
         if (StringUtils.isBlank(userIsExist)) {//不存在该用户，进行注册
             System.out.println(userIsExist);
-            user = new User(wx.getOpenid(), wx.getSession_key(), userVO.getNickName(), userVO.getGender(), userVO.getAvatarUrl(), 0, 0);
+            user = new User(wx.getOpenid(), wx.getSession_key(), userVO.getNickName(), userVO.getGender(), userVO.getAvatarUrl());
             userService.saveRegister(user);//将用户信息保存到数据库
             setUserRedis(wx);//将 openid 与 session_key 保存到 redis 中
         } else {//该用户已存在
@@ -154,13 +153,14 @@ public class UserController extends BasicController {
 
             //获取 week 信息，方便筛选
             String rentWeek = "";
-            for (RentTime rentTime : rentTimes){
+            for (RentTime rentTime : rentTimes) {
                 rentWeek += String.valueOf(rentTime.getWeek()) + ",";
             }
 
             //rent 信息添加
             Rent rent = new Rent(rentVO.getRent().getOpenId(), rentVO.getRent().getMoney(), rentVO.getRent().getManned(), rentWeek, Long.toString(new Date().getTime()), rentVO.getRent().getNickName(),
-                    rentVO.getRent().getGender(), rentVO.getRent().getAvatarUrl(), rentVO.getRent().getArea(), rentVO.getRent().getAreaNum(), rentVO.getRent().getWeixin(), rentVO.getRent().getRent(), rentVO.getRent().getMessage());
+                    rentVO.getRent().getGender(), rentVO.getRent().getAvatarUrl(), rentVO.getRent().getArea(), rentVO.getRent().getAreaNum(), rentVO.getRent().getWeixin(), rentVO.getRent().getRent(),
+                    rentVO.getRent().getMessage(), rentVO.getRent().getCount());
             int addRent = rentService.addRent(rent);//修改或添加
             if (addRent == -1) {
                 return new RentVO(new Rent("-1"));
@@ -188,6 +188,21 @@ public class UserController extends BasicController {
         }
         rentService.uploadCar(openId, uploadPathDB);//上传，同时判断是否已经存在
         return rentService.getRentByOpenId(openId);
+    }
+
+    //出租状态修改
+    @RequestMapping("/rent/rent")
+    public Integer rentChange(String rentId, Integer rent) {
+        if (rentId == null || rent == null) {
+            return -1;
+        } else {
+            int rentChange = rentService.rentChange(rentId, rent);
+            if (rentChange > 0) {
+                return rent;
+            } else {
+                return -1;
+            }
+        }
     }
 
     //返回我的求租列表
@@ -232,6 +247,66 @@ public class UserController extends BasicController {
         } else {
             usedService.addUsed(used);
             return usedService.getUsedByOpenId(used.getOpenId());
+        }
+    }
+
+    //二手车状态修改
+    @RequestMapping("/used/used")
+    public Integer usedChange(String usedId, Integer used) {
+        if (usedId == null || usedId == null) {
+            return -1;
+        } else {
+            int usedChange = usedService.usedChange(usedId, used);
+            if (usedChange > 0) {
+                return used;
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    //查看我的收藏
+    @RequestMapping("/favorite")
+    public FavoriteVO favoriteList(String openId) {
+        List<Favorite> favorites = favoriteService.getFavoriteListByOpenId(openId);
+        if (favorites == null || favorites.size() == 0) {
+            return new FavoriteVO();
+        } else {
+            List<RentVO> rentVOList = new ArrayList<>();
+            List<Publish> publishList = new ArrayList<>();
+            List<Used> usedList = new ArrayList<>();
+
+            for (Favorite favorite : favorites) {
+                if (favorite.getType() == 1) { //rent
+                    Rent rent = rentService.getRentById(favorite.getOtherId());
+                    List<RentTime> rentTimes = rentTimeService.getRentTimeByOpenId(rent.getOpenId());
+                    rentVOList.add(new RentVO(rent, rentTimes));
+                } else if (favorite.getType() == 2) { //publish
+                    Publish publish = publishService.getPublishById(favorite.getOtherId());
+                    publishList.add(publish);
+                } else if (favorite.getType() == 3) { //used
+                    Used used = usedService.getUsedById(favorite.getOtherId());
+                    usedList.add(used);
+                } else {
+                    return new FavoriteVO();
+                }
+            }
+            return new FavoriteVO(rentVOList, publishList, usedList);
+        }
+    }
+
+    //添加或取消收藏
+    @RequestMapping("/favorite/change")
+    public Favorite changeFavorite(@RequestBody Favorite favorite) {
+        if (favorite.getType() != null) {
+            int changeFavorite = favoriteService.changeFavorite(favorite);
+            if (changeFavorite > 0) {
+                return favorite;
+            } else {
+                return new Favorite("-1");
+            }
+        } else {
+            return new Favorite("-1");
         }
     }
 

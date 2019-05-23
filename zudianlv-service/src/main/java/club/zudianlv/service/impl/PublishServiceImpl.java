@@ -43,7 +43,7 @@ public class PublishServiceImpl implements PublishService {
         int insert = publishMapper.insert(publish);
         if (insert > 0) {
             return getPublishById(id);
-        }else {
+        } else {
             return new Publish("-1");
         }
     }
@@ -52,5 +52,17 @@ public class PublishServiceImpl implements PublishService {
     public Publish getPublishById(String publishId) {
         Publish publish = publishMapper.selectOne(new Publish(publishId, 2));
         return publish;
+    }
+
+    @Override
+    public int changeCount(String publishId, Integer count) {
+        int changeCount = publishMapper.changeCount(publishId, count);
+        return changeCount;
+    }
+
+    @Override
+    public int statusChange(String publishId, Integer status) {
+        int change = publishMapper.statusChange(publishId, status);
+        return change;
     }
 }
