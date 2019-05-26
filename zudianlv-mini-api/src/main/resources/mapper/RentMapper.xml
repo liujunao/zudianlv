@@ -57,10 +57,14 @@
     </select>
 
     <update id="changeCount">
-        UPDATE rent SET "count"=#{1} WHERE rent_id=#{0}
+        UPDATE rent SET `count`=#{count} WHERE rent_id=#{rentId}
     </update>
 
     <update id="rentChange">
-        UPDATE rent SET rent=#{1} WHERE rent_id=#{0}
+        UPDATE rent SET rent=#{rent} WHERE rent_id=#{rentId}
     </update>
+
+    <select id="selectAllByrent" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM rent WHERE rent=#{rent} order by time desc
+    </select>
 </mapper>

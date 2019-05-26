@@ -25,10 +25,17 @@
     </resultMap>
 
     <update id="changeCount">
-        UPDATE publish SET "count"=#{1} WHERE publish_id=#{0}
+        UPDATE publish SET `count`=#{count} WHERE publish_id=#{publishId}
     </update>
 
     <update id="statusChange">
-        UPDATE publish SET status=#{1} WHERE publish_id=#{0}
+        UPDATE publish SET status=#{status} WHERE publish_id=#{publishId}
     </update>
+
+    <select id="selectAllByOK" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM publish
+        WHERE str_to_date(yyyy, '%Y-%m-%d') >= (SELECT curdate())  AND status = #{status}
+        AND ((SELECT curtime()) BETWEEN str_to_date(begin_time, '%H:%i:%s') AND str_to_date(end_time, '%H:%i:%s'))
+        order by create_time desc
+    </select>
 </mapper>

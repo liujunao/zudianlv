@@ -3,6 +3,7 @@ package club.zudianlv.mapper;
 import club.zudianlv.pojo.Rent;
 import club.zudianlv.pojo.vo.SelectVO;
 import club.zudianlv.utils.MyMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,8 +18,12 @@ public interface RentMapper extends MyMapper<Rent> {
     public Rent getRentById(String rentId);
 
     //count
-    public int changeCount(String rentId, Integer count);
+    public int changeCount(@Param("rentId") String rentId, @Param("count") Integer count);
 
     //修改 rent 状态
-    public int rentChange(String rentId, Integer rent);
+    public int rentChange(@Param("rentId") String rentId, @Param("rent") Integer rent);
+
+    //获取所有未过期出租信息
+    public List<Rent> selectAllByrent(int rent);
+
 }

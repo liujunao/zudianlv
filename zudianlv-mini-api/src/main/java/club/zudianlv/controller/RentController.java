@@ -71,7 +71,7 @@ public class RentController {
     //添加阅读数
     @RequestMapping("/count")
     public Integer count(String rentId, Integer count) {
-        if (rentId == null) {
+        if (rentId == null || count == null) {
             return -1;
         } else {
             int changeCount = rentService.changeCount(rentId, count);

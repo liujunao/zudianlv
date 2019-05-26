@@ -106,6 +106,12 @@ public class Used {
         this.openId = openId;
     }
 
+    public Used(String usedId, String openId, String usedImage) {
+        this.usedId = usedId;
+        this.openId = openId;
+        this.usedImage = usedImage;
+    }
+
     /**
      * 获取二手车id
      *

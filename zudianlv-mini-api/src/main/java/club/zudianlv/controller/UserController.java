@@ -110,9 +110,9 @@ public class UserController extends BasicController {
             return new User("-1");
         }
         //保存到数据库中的相对路径
-        String uploadPathDB = "/" + openId;
+        String uploadPathDB = "/" + openId + "/user";
 
-        String uploadImg = uploadImg(openId, files, uploadPathDB);//图片保存
+        String uploadImg = uploadImg(files, uploadPathDB);//图片保存
         if (uploadImg.equals("-1")) {
             return new User("-1");
         } else {
@@ -179,8 +179,8 @@ public class UserController extends BasicController {
             return new Rent("-1");
         }
         //保存到数据库中的相对路径
-        String uploadPathDB = "/" + openId;
-        String uploadImg = uploadImg(openId, files, uploadPathDB);//上传图片到文件夹
+        String uploadPathDB = "/" + openId + "/rent";
+        String uploadImg = uploadImg(files, uploadPathDB);//上传图片到文件夹
         if (uploadImg.equals("-1")) {
             return new Rent("-1");
         } else {
@@ -235,8 +235,8 @@ public class UserController extends BasicController {
     //修改或添加二手车信息
     @RequestMapping("/used/change")
     public Used changeUsed(@RequestBody Used used) {
-        System.out.println(used);
         Used usedByOpenId = usedService.getUsedByOpenId(used.getOpenId());
+        used.setCreateTime(Long.toString(new Date().getTime()));
         if (usedByOpenId != null) {
             int updateUsed = usedService.updateUsed(used);
             if (updateUsed > 0) {
@@ -248,6 +248,24 @@ public class UserController extends BasicController {
             usedService.addUsed(used);
             return usedService.getUsedByOpenId(used.getOpenId());
         }
+    }
+
+    //上传二手车辆图片
+    @RequestMapping("/used/addCar")
+    public Used usedAddCarImage(String openId, @RequestParam("car") MultipartFile[] files) throws IOException {
+        if (StringUtils.isBlank(openId)) {
+            return new Used("-1");
+        }
+        //保存到数据库中的相对路径
+        String uploadPathDB = "/" + openId + "/used";
+        String uploadImg = uploadImg(files, uploadPathDB);//上传图片到文件夹
+        if (uploadImg.equals("-1")) {
+            return new Used("-1");
+        } else {
+            uploadPathDB += "/" + uploadImg;
+        }
+        usedService.uploadCar(openId, uploadPathDB);//上传，同时判断是否已经存在
+        return usedService.getUsedByOpenId(openId);
     }
 
     //二手车状态修改
@@ -311,7 +329,7 @@ public class UserController extends BasicController {
     }
 
     //上传图片
-    private String uploadImg(String openId, MultipartFile[] files, String uploadPathDB) throws IOException {
+    private String uploadImg(MultipartFile[] files, String uploadPathDB) throws IOException {
         //文件保存位置
         String fileSpace = resourceConfig.getFileSpace();
 
@@ -326,9 +344,17 @@ public class UserController extends BasicController {
                     String finalPath = fileSpace + uploadPathDB + "/" + fileName;
                     //判断文件夹是否存在
                     File outFile = new File(finalPath);
-                    if (outFile.getParentFile() != null || !outFile.getParentFile().isDirectory()) {
+                    if (!outFile.getParentFile().exists() && !outFile.getParentFile().isDirectory()) {
                         //创建文件夹
                         outFile.getParentFile().mkdirs();
+                    } else { //删除文件夹中之前存在的图片
+                        String[] list = outFile.getParentFile().list();
+                        for (String str : list) {
+                            File tmpFile = new File(fileSpace + uploadPathDB + "/" + str);
+                            if (!tmpFile.isDirectory()) {
+                                tmpFile.delete();
+                            }
+                        }
                     }
                     fileOutputStream = new FileOutputStream(outFile);
                     inputStream = files[0].getInputStream();

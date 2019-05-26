@@ -33,7 +33,7 @@ public class PublishServiceImpl implements PublishService {
 
     @Override
     public List<Publish> allPublish() {
-        return publishMapper.selectAll();
+        return publishMapper.selectAllByOK(0);
     }
 
     @Override
@@ -57,7 +57,11 @@ public class PublishServiceImpl implements PublishService {
     @Override
     public int changeCount(String publishId, Integer count) {
         int changeCount = publishMapper.changeCount(publishId, count);
-        return changeCount;
+        if (changeCount > 0){
+            return count;
+        }else {
+            return -1;
+        }
     }
 
     @Override

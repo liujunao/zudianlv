@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +46,7 @@ public class PublishController {
     //发布求租信息
     @RequestMapping("/add")
     public Publish addPublish(@RequestBody Publish publish) {
+        publish.setCreateTime(Long.toString(new Date().getTime()));
         Publish addPublish = publishService.addPublish(publish);
         return addPublish;
     }
@@ -52,7 +54,7 @@ public class PublishController {
     //添加阅读数
     @RequestMapping("/count")
     public Integer count(String publishId, Integer count) {
-        if (publishId == null) {
+        if (publishId == null || count == null) {
             return -1;
         } else {
             int changeCount = publishService.changeCount(publishId, count);

@@ -2,6 +2,9 @@ package club.zudianlv.mapper;
 
 import club.zudianlv.pojo.Used;
 import club.zudianlv.utils.MyMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UsedMapper extends MyMapper<Used> {
 
@@ -9,8 +12,11 @@ public interface UsedMapper extends MyMapper<Used> {
     public Used getUsedById(String usedId);
 
     //count
-    public int changeCount(String usedId, Integer count);
+    public int changeCount(@Param("usedId") String usedId, @Param("count") Integer count);
 
     //二手车状态修改
-    public int usedChange(String usedId, Integer used);
+    public int usedChange(@Param("usedId") String usedId, @Param("used") Integer used);
+
+    //获取所有未过期二手车信息
+    public List<Used> selectAllByUsed(int used);
 }

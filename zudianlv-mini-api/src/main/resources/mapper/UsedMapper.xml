@@ -27,10 +27,14 @@
     </select>
 
     <update id="changeCount">
-        UPDATE used SET "count"=#{1} WHERE used_id=#{0}
+        UPDATE used SET `count`=#{count} WHERE used_id=#{usedId}
     </update>
 
     <update id="usedChange">
-        UPDATE used SET used=#{1} WHERE used_id=#{0}
+        UPDATE used SET used=#{used} WHERE used_id=#{usedId}
     </update>
+
+    <select id="selectAllByUsed" parameterType="int" resultMap="BaseResultMap">
+        select * from used WHERE used=#{used} order by create_time desc;
+    </select>
 </mapper>

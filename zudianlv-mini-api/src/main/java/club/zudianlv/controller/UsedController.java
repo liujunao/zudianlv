@@ -31,10 +31,10 @@ public class UsedController {
         List<Used> useds = usedService.getAllUsed();
         for (Used used : useds) {
             Favorite favorite = favoriteService.getFavoriteByopenIdAndOtherId(used.getOpenId(), used.getUsedId(), 3);
-            if (favorite != null){
-                usedFList.add(new UsedF(used,3));
-            }else {
-                usedFList.add(new UsedF(used,0));
+            if (favorite != null) {
+                usedFList.add(new UsedF(used, 3));
+            } else {
+                usedFList.add(new UsedF(used, 0));
             }
         }
         return usedFList;
@@ -43,7 +43,7 @@ public class UsedController {
     //添加阅读数
     @RequestMapping("/count")
     public Integer count(String usedId, Integer count) {
-        if (usedId == null) {
+        if (usedId == null || count == null) {
             return -1;
         } else {
             int changeCount = usedService.changeCount(usedId, count);
