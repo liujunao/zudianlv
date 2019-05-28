@@ -26,7 +26,7 @@ public class RentServiceImpl implements RentService {
 
     @Override
     public int addRent(Rent rent) {
-        int result = rentMapper.addRent(rent);
+        int result = rentMapper.addRent(rent);;
         return result;
     }
 
@@ -70,9 +70,9 @@ public class RentServiceImpl implements RentService {
     @Override
     public int changeCount(String rentId, Integer count) {
         int changeCount = rentMapper.changeCount(rentId, count);
-        if (changeCount > 0){
+        if (changeCount > 0) {
             return count;
-        }else {
+        } else {
             return -1;
         }
     }

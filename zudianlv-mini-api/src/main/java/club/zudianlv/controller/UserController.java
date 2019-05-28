@@ -286,6 +286,9 @@ public class UserController extends BasicController {
     //查看我的收藏
     @RequestMapping("/favorite")
     public FavoriteVO favoriteList(String openId) {
+        if (openId == null){
+            return new FavoriteVO();
+        }
         List<Favorite> favorites = favoriteService.getFavoriteListByOpenId(openId);
         if (favorites == null || favorites.size() == 0) {
             return new FavoriteVO();
@@ -297,16 +300,20 @@ public class UserController extends BasicController {
             for (Favorite favorite : favorites) {
                 if (favorite.getType() == 1) { //rent
                     Rent rent = rentService.getRentById(favorite.getOtherId());
-                    List<RentTime> rentTimes = rentTimeService.getRentTimeByOpenId(rent.getOpenId());
-                    rentVOList.add(new RentVO(rent, rentTimes));
+                    if (rent != null) {
+                        List<RentTime> rentTimes = rentTimeService.getRentTimeByOpenId(rent.getOpenId());
+                        rentVOList.add(new RentVO(rent, rentTimes));
+                    }
                 } else if (favorite.getType() == 2) { //publish
                     Publish publish = publishService.getPublishById(favorite.getOtherId());
-                    publishList.add(publish);
+                    if (publish != null) {
+                        publishList.add(publish);
+                    }
                 } else if (favorite.getType() == 3) { //used
                     Used used = usedService.getUsedById(favorite.getOtherId());
-                    usedList.add(used);
-                } else {
-                    return new FavoriteVO();
+                    if (used != null) {
+                        usedList.add(used);
+                    }
                 }
             }
             return new FavoriteVO(rentVOList, publishList, usedList);

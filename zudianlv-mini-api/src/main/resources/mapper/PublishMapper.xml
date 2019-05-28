@@ -32,10 +32,19 @@
         UPDATE publish SET status=#{status} WHERE publish_id=#{publishId}
     </update>
 
+    <!-- 由于服务器端安装的为 mysql5.7 版本 str_to_date 存在问题，因此更改
+        SELECT * FROM publish
+        WHERE str_to_date(yyyy, '%Y-%m-%d') >= (SELECT curdate())
+        AND (str_to_date(end_time, '%H:%i:%s') > (SELECT curtime()))
+        order by create_time desc
+    -->
     <select id="selectAllByOK" parameterType="int" resultMap="BaseResultMap">
         SELECT * FROM publish
-        WHERE str_to_date(yyyy, '%Y-%m-%d') >= (SELECT curdate())  AND status = #{status}
-        AND ((SELECT curtime()) BETWEEN str_to_date(begin_time, '%H:%i:%s') AND str_to_date(end_time, '%H:%i:%s'))
-        order by create_time desc
+        WHERE str_to_date(CONCAT(yyyy," ",end_time), '%Y-%m-%d %H:%i:%s') >= (SELECT now())
+        ORDER BY create_time DESC;
+    </select>
+
+    <select id="publishListByOpenId" parameterType="string" resultMap="BaseResultMap">
+        SELECT * FROM publish WHERE open_id=#{openId} ORDER BY create_time DESC;
     </select>
 </mapper>

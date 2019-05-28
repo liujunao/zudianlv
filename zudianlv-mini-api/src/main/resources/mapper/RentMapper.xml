@@ -65,6 +65,6 @@
     </update>
 
     <select id="selectAllByrent" parameterType="int" resultMap="BaseResultMap">
-        SELECT * FROM rent WHERE rent=#{rent} order by time desc
+        SELECT * FROM rent WHERE rent=#{rent} order by `time` desc
     </select>
 </mapper>

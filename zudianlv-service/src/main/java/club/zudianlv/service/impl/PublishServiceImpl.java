@@ -1,6 +1,8 @@
 package club.zudianlv.service.impl;
 
+import club.zudianlv.mapper.FavoriteMapper;
 import club.zudianlv.mapper.PublishMapper;
+import club.zudianlv.pojo.Favorite;
 import club.zudianlv.pojo.Publish;
 import club.zudianlv.service.PublishService;
 import org.n3r.idworker.Sid;
@@ -19,16 +21,23 @@ public class PublishServiceImpl implements PublishService {
     private PublishMapper publishMapper;
     @Autowired
     private Sid sid;
+    @Autowired
+    private FavoriteMapper favoriteMapper;
 
     @Override
     public List<Publish> publishListByOpenId(String openId) {
-        List<Publish> publishList = publishMapper.select(new Publish(openId));
+        List<Publish> publishList = publishMapper.publishListByOpenId(openId);
         return publishList;
     }
 
     @Override
     public void deleteById(String publishId, String openId) {
         publishMapper.delete(new Publish(publishId, openId));
+        //检测是否存在收藏关联
+        Favorite favorite = favoriteMapper.selectOne(new Favorite(openId, publishId, 2));
+        if (favorite != null){
+            favoriteMapper.deleteFavorite(favorite);
+        }
     }
 
     @Override

@@ -15,4 +15,7 @@ public interface PublishMapper extends MyMapper<Publish> {
 
     //获取未过期且有效的求租信息
     public List<Publish> selectAllByOK(int status);
+
+    //获取指定 openId 信息
+    public List<Publish> publishListByOpenId(String openId);
 }

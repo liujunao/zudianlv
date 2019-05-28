@@ -17,6 +17,8 @@ public class FavoriteVO {
     public FavoriteVO() {
     }
 
+
+
     public FavoriteVO(List<RentVO> rent, List<Publish> publish, List<Used> used) {
         this.rent = rent;
         this.publish = publish;
